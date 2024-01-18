@@ -24,15 +24,37 @@ fetch("http://localhost:3000/ramens")
     }
 
     );
-
-
-    // showButton.addEventListener("click", () => {
-    //     myDiv.style.display = "block";
-    //   });
-
-    // function displayInfo (ramenInfo){
-    //     const info = document.getElementById("#ramen-detail")
-    //     const ramenName = ramen.name;
-    //     document.getElementsByClassName("name").textContent = ramenName;
-    //     const restaurantName = ramen.restaurant;
-    //     document.getElementsByClassName("restaurant").textContent = restaurantName;
+document.querySelector('#new-ramen').addEventListener("submit", event => {
+    event.preventDefault();
+    fetch("http://localhost:3000/ramens", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "Accept": "application.json"
+    },
+    body: JSON.stringify({
+        name: document.querySelector('#new-name').value,
+        restaurant: document.querySelector('#new-restaurant').value,
+        image: document.querySelector('#new-image').value,
+        rating: document.querySelector('#new-rating').value,
+        comment: document.querySelector('#new-comment').value
+    })
+    })
+    .then(response => response.json())
+    .then(newRamen => {
+        // const ramenList = document.querySelector("#ramen-menu");
+        // ramenList.append(newRamen);
+        const img = document.createElement("img");
+        img.setAttribute('src', newRamen.image);
+        document.querySelector("#ramen-menu").append(img);
+        img.addEventListener("click", () => {
+            const info = document.getElementById("ramen-detail");
+            const infoImage = document.querySelector("#ramen-detail .detail-image");
+            infoImage.setAttribute('src', newRamen.image);
+            document.querySelector("#ramen-detail .name").textContent = newRamen.name;
+            document.querySelector("#ramen-detail .restaurant").textContent = newRamen.restaurant;
+            document.getElementById("rating-display").textContent = newRamen.rating;
+            document.getElementById("comment-display").textContent = newRamen.comment;
+    })
+    })
+})
